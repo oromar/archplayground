@@ -2,6 +2,7 @@ import { Dinheiro } from "../value-objects/Dinheiro"
 import { TipoTransacao, Transacao } from "../value-objects/Transacao"
 
 export class Conta {
+    private id: number
     private saldo: Dinheiro
     private limiteCredito: Dinheiro
     private transacoes: Transacao[]
@@ -43,6 +44,10 @@ export class Conta {
 
     public getTransacoes(): Transacao[] {
         return this.transacoes
+    }
+
+    public getId(){
+        return this.id
     }
 
     public transfereSaldo(valor: Dinheiro, conta: Conta) : boolean {

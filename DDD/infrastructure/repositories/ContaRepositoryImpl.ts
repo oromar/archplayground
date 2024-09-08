@@ -11,6 +11,10 @@ export class ContaRepositoryImpl implements ContaRepository {
         this.contas = []
     }
 
+    findById(id: number): Conta {
+        return this.contas.find(conta => conta.getId() === id)
+    }
+
     save(conta: Conta): void {
        this.contas.push(conta)
     }
