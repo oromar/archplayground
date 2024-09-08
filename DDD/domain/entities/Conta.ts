@@ -12,24 +12,6 @@ export class Conta {
         this.limiteCredito = limiteCredito
     }
 
-    public realizarDebito(dinheiro: Dinheiro): boolean{
-        const saldoComLimite = this.saldo.getValor() + this.limiteCredito.getValor()
-        if (saldoComLimite < dinheiro.getValor()){
-            return false
-        }
-        this.saldo = this.saldo.descontar(dinheiro)
-        this.registrarTransacao(TipoTransacao.debito, dinheiro)
-        return true
-    }
-
-    public realizarCredito(dinheiro: Dinheiro): Dinheiro{
-        if (dinheiro.getValor() > 0) {
-            this.saldo = this.saldo.somar(dinheiro)
-        }
-        this.registrarTransacao(TipoTransacao.credito, dinheiro)
-        return this.saldo
-    }
-
     public definirLimiteCredito(limiteCredito: Dinheiro){
         this.limiteCredito = limiteCredito
     }
@@ -65,6 +47,24 @@ export class Conta {
             return this.realizarDebito(dinheiro)
         else 
             return this.realizarCredito(dinheiro).getValor() === saldoAnterior.getValor() + dinheiro.getValor()
+    }
+
+    private realizarDebito(dinheiro: Dinheiro): boolean{
+        const saldoComLimite = this.saldo.getValor() + this.limiteCredito.getValor()
+        if (saldoComLimite < dinheiro.getValor()){
+            return false
+        }
+        this.saldo = this.saldo.descontar(dinheiro)
+        this.registrarTransacao(TipoTransacao.debito, dinheiro)
+        return true
+    }
+
+    private realizarCredito(dinheiro: Dinheiro): Dinheiro{
+        if (dinheiro.getValor() > 0) {
+            this.saldo = this.saldo.somar(dinheiro)
+        }
+        this.registrarTransacao(TipoTransacao.credito, dinheiro)
+        return this.saldo
     }
 
     private registrarTransacao(tipo: TipoTransacao, valor : Dinheiro) {
