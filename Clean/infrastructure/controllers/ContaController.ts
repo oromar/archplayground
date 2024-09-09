@@ -10,6 +10,7 @@ import { Conta } from "../../domain/entities/Conta";
 import { ListarContas } from "../../app/usecases/listar/ListarContas";
 import { CriarConta } from "../../app/usecases/criar/CriarConta";
 import { CriarContaInput } from "../../app/usecases/criar/CriarContaInput";
+import { Dinheiro } from "../../domain/value-objects/Dinheiro";
 
 export class ContaController {
 
@@ -36,10 +37,11 @@ export class ContaController {
     }
 
     public async criar(req: Request, res: Response) {
-        const {valor, limite} = req.body
-        const input = new CriarContaInput(valor, limite)
+        const {moeda, valor, limite} = req.body
+        
+        const input = new CriarContaInput(new Dinheiro(valor, moeda), new Dinheiro(limite, moeda))
         await this.criarConta.executar(input)
-        return res.status(201).json({message: "Conta cadastradao com sucesso"})
+        return res.status(201).json({message: "Conta cadastrada com sucesso"})
     }
 
     public async consultar(req: Request, res: Response) {
@@ -50,18 +52,25 @@ export class ContaController {
     }
 
     public async creditar(req: Request, res: Response) {
-        const {id, dinheiro} = req.body
-        await this.creditarEmConta.executar(new OperacaoEmContaInput(id, dinheiro))
+        const {id, valor, moeda} = req.body
+        await this.creditarEmConta.executar(new OperacaoEmContaInput(id, new Dinheiro(valor, moeda)))
+        return res.status(200).json({message: "Crédito efetuado com sucesso"})
     }
 
     public async debitar(req: Request, res: Response) {
-        const {id, dinheiro} = req.body
-        await this.debitarEmConta.executar(new OperacaoEmContaInput(id, dinheiro))
+        const {id, valor, moeda} = req.body
+        try {
+            await this.debitarEmConta.executar(new OperacaoEmContaInput(id, new Dinheiro(valor, moeda)))
+        }catch (e) {
+            return res.status(400).json({message: e?.message})
+        }
+        return res.status(200).json({message: "Débito efetuado com sucesso"})
     }
 
     public async definirLimite(req: Request, res: Response) {
-        const {id, limiteCredito} = req.body
-        await this.definirLimiteCredito.executar(new DefinirLimiteCreditoInput(id, limiteCredito))
+        const {id, valor, moeda} = req.body
+        await this.definirLimiteCredito.executar(new DefinirLimiteCreditoInput(id, new Dinheiro(valor, moeda)))
+        return res.status(200).json({message: "Limite alterado com sucesso"})
     }
 
     public async listar(req: Request, res: Response) {

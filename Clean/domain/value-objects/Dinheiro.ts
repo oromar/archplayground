@@ -26,6 +26,7 @@ export class Dinheiro {
     }
 
     private validarMoedas(dinheiro: Dinheiro) {
+        console.log(dinheiro)
         if (this.moeda !== dinheiro.getMoeda()) {
             throw new Error("Não é possível subtrair dinheiro de moedas diferentes")
         }
