@@ -17,6 +17,7 @@ export class ContaRepositoryImpl implements ContaRepository {
     }
     
     save(conta: Conta): void {
+        conta.setId(this.contas.length+1)
         this.contas.push(conta)
     }
 

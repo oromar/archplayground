@@ -19,6 +19,10 @@ export class Conta {
         return this.id
     }
 
+    public setId(id: number): void {
+        this.id = id
+    }
+
     public getSaldo(): Dinheiro {
         return this.saldo
     }
