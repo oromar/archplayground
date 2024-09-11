@@ -1,4 +1,5 @@
 import {Request, Response} from "express"
+import UUID from "crypto"
 
 import { OperacaoEmContaInput } from "../../app/usecases/common/OperacaoEmContaInput";
 import { ConsultarConta } from "../../app/usecases/consultar/ConsultarConta";
@@ -11,6 +12,7 @@ import { ListarContas } from "../../app/usecases/listar/ListarContas";
 import { CriarConta } from "../../app/usecases/criar/CriarConta";
 import { CriarContaInput } from "../../app/usecases/criar/CriarContaInput";
 import { Dinheiro } from "../../domain/value-objects/Dinheiro";
+import { ConsultarContaOutput } from "../../app/usecases/consultar/ConsultarContaOutput";
 
 export class ContaController {
 
@@ -45,10 +47,14 @@ export class ContaController {
     }
 
     public async consultar(req: Request, res: Response) {
-        const idString = req.query.id
-        const id = +idString
-        const conta = await this.consultarConta.executar(id)
-        this.render(conta, res)
+        const {idString} = req.query
+        try {
+
+            const conta = await this.consultarConta.executar(idString as string)
+            this.render(conta, res)
+        } catch (e) {
+            res.status(400).json({message: e.message})
+        }
     }
 
     public async creditar(req: Request, res: Response) {
@@ -78,11 +84,7 @@ export class ContaController {
         return res.status(200).json(contas)
     }
 
-    public render(conta: Conta, res: Response) {
-        return res.status(200).json({
-            saldo: conta.getSaldo(),
-            transacoes: conta.getTransacoes(),
-            id: conta.getId()
-        })
+    public render(output: ConsultarContaOutput, res: Response) {
+        return res.status(200).json({ ...output })
     }
 }

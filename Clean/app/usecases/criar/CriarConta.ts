@@ -12,9 +12,8 @@ export class CriarConta implements UseCase<CriarContaInput, void> {
     }
 
     public async executar(entrada: CriarContaInput): Promise<void> {
-
         const conta: Conta = new Conta(entrada.saldoInicial, entrada.limiteCredito)
-        await this.contaRepository.save(conta)
+        this.contaRepository.save(conta)
     }
 
 }

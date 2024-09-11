@@ -7,18 +7,20 @@ export class ContaRepositoryImpl implements ContaRepository {
     constructor() {
         this.contas = []
     }
+    save(conta: Conta): void {
+        this.contas.push(conta)
+    }
 
-    async findById(id: number): Promise<Conta> {
+    update(id: string, conta: Conta): void {
+        this.contas = this.contas.filter(a => a.getId() !== id)
+        this.contas.push(conta)
+    }
+
+    async findById(id: string): Promise<Conta> {
         return this.contas.find(a => a.getId() == id);
     }
 
     async findAll(): Promise<Conta[]> {
         return this.contas
     }
-    
-    save(conta: Conta): void {
-        conta.setId(this.contas.length+1)
-        this.contas.push(conta)
-    }
-
 }

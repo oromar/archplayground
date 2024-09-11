@@ -1,5 +1,4 @@
 import { ContaRepository } from "../../../domain/repositories/ContaRepository";
-import { Dinheiro } from "../../../domain/value-objects/Dinheiro";
 import { UseCase } from "../common/UseCase";
 import { OperacaoEmContaInput } from "../common/OperacaoEmContaInput";
 
